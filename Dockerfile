@@ -48,8 +48,8 @@ RUN docker-php-ext-configure gd \
         --with-vpx-dir=/usr/lib/x86_64-linux-gnu/
 
 RUN docker-php-ext-install gd exif intl xsl json soap dom zip opcache pdo pdo_mysql bcmath
-RUN pecl install mcrypt-1.0.1 xdebug
-RUN docker-php-ext-enable mcrypt xdebug
+#RUN pecl install mcrypt-1.0.1 xdebug
+#RUN docker-php-ext-enable mcrypt xdebug
 
 ENV PHP_MEMORY_LIMIT 128M
 ENV PHP_POST_MAX_SIZE 8M
@@ -60,10 +60,10 @@ COPY config/php.ini /usr/local/etc/php/
 # Install dependencies
 
 RUN apt-get install -y \
-        mcrypt \
-		php7.1-gd \
-		php7.1-intl \
-		php7.1-xsl \
+        #mcrypt \
+		#php7.1-gd \
+		#php7.1-intl \
+		#php7.1-xsl \
 		mysql-client \
         supervisor \
         cron
@@ -75,14 +75,14 @@ RUN apt-get autoremove -y
 RUN apt-get clean
 
 # Install composer
-
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && php -r "unlink('composer-setup.php');"
-
-RUN mkdir -p /var/www/.composer \
-    && chown www-data:www-data /var/www/.composer
+#
+#RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+#    && php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+#    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+#    && php -r "unlink('composer-setup.php');"
+#
+#RUN mkdir -p /var/www/.composer \
+#    && chown www-data:www-data /var/www/.composer
 
 # Forward request and error logs to docker log collector
 
@@ -90,7 +90,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Copy the default index.php into /web
-
+RUN mkdir -p /web/public
 COPY index.php /web/public/index.php
 
 # Make /web owned by www-data
@@ -165,5 +165,4 @@ RUN curl https://get.acme.sh | sh
 EXPOSE 443 80
 
 # Run supervisor and deploy script
-
-CMD ["/scripts/boot.sh"]
+#CMD ["/scripts/boot.sh"]
