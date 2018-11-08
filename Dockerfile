@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.1-fpm
 
 LABEL maintainer="Dylan Lamers <dylan@dutchandbold.com>"
 
@@ -61,6 +61,10 @@ COPY config/php.ini /usr/local/etc/php/
 
 RUN apt-get install -y \
         mcrypt \
+		php7.1-gd \
+		php7.1-intl \
+		php7.1-xsl \
+		mysql-client \
         supervisor \
         cron
 
@@ -126,7 +130,8 @@ ENV LETSENCRYPT_SSL_PATH /config/ssl/
 
 RUN mkdir /config/ssl
 
-COPY config/nginx-default.conf /config/
+#COPY config/nginx-default.conf /config/
+COPY sites/*.conf /etc/nginx/sites-available/
 
 # Laravel Scheduler
 
